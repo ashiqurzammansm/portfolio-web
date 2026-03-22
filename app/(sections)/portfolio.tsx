@@ -1,80 +1,97 @@
-"use client";
-import Image from "next/image";
-import { useMemo, useState } from "react";
-import { projects } from "@/lib/data";
-import { motion } from "framer-motion";
-import MotionSection from "@/components/motion-section";
-import Magnetic from "@/components/magnetic";
+// app/(sections)/portfolio.tsx
 
-const filters = ["all", "web", "mobile", "design", "other"] as const;
-type Filter = typeof filters[number];
+import { connectDB } from "@/lib/db";
+import Project from "@/models/Project";
 
-const container = {
-    hidden: { opacity: 1 },
-    show: {
-        opacity: 1,
-        transition: { staggerChildren: 0.08, delayChildren: 0.12 },
-    },
-};
+async function getProjects() {
+  await connectDB();
+  const projects = await Project.find().sort({ createdAt: -1 });
+  return JSON.parse(JSON.stringify(projects));
+}
 
-const item = {
-    hidden: { opacity: 0, y: 24 },
-    show:   { opacity: 1, y: 0, transition: { duration: 0.45 } },
-};
+export default async function Portfolio() {
+  const projects = await getProjects();
 
-export default function Portfolio() {
-    const [filter, setFilter] = useState<Filter>("all");
-    const items = useMemo(() => filter === "all" ? projects : projects.filter(p => p.tag === filter), [filter]);
+  return (
+    <section className="py-16 px-4 bg-gray-100">
+      <div className="max-w-6xl mx-auto">
+        
+        <h2 className="text-3xl font-bold text-center mb-10">
+          My Portfolio
+        </h2>
 
-    return (
-        <MotionSection>
-            <div>
-                <div className="flex items-center justify-between gap-6">
-                    <h2 className="section-title">Portfolio</h2>
-                    <div className="flex flex-wrap gap-2">
-                        {filters.map((f) => (
-                            <Magnetic key={f} scale={1.05}>
-                                <button
-                                    onClick={() => setFilter(f)}
-                                    className={`button cursor-link ${filter===f ? "bg-blue-600 text-white" : ""}`}
-                                >
-                                    {f}
-                                </button>
-                            </Magnetic>
-                        ))}
-                    </div>
+        <div className="grid md:grid-cols-3 gap-6">
+          
+          {projects.length === 0 && (
+            <p className="text-center col-span-3">
+              No projects found.
+            </p>
+          )}
+
+          {projects.map((project: any) => (
+            <div
+              key={project._id}
+              className="bg-white rounded-lg shadow overflow-hidden"
+            >
+              
+              {project.image && (
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-48 object-cover"
+                />
+              )}
+
+              <div className="p-4">
+                <h3 className="text-xl font-semibold">
+                  {project.title}
+                </h3>
+
+                <p className="text-sm text-gray-600 mt-2">
+                  {project.description}
+                </p>
+
+                {/* Tech Stack */}
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {project.techStack?.map((tech: string, i: number) => (
+                    <span
+                      key={i}
+                      className="text-xs bg-gray-200 px-2 py-1 rounded"
+                    >
+                      {tech}
+                    </span>
+                  ))}
                 </div>
 
-                <motion.div
-                    className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
-                    variants={container}
-                    initial="hidden"
-                    whileInView="show"
-                    viewport={{ once: true, amount: 0.15 }}
-                >
-                    {items.map((p) => (
-                        <motion.article key={p.title} className="card overflow-hidden" variants={item}>
-                            <Image src={p.image} alt={p.title} width={640} height={400} className="h-44 w-full object-cover" />
-                            <div className="p-4">
-                                <h3 className="font-semibold text-lg">{p.title}</h3>
-                                <p className="mt-2 text-sm opacity-80">{p.summary}</p>
-                                <div className="mt-3 flex gap-2">
-                                    {p.url && (
-                                        <Magnetic>
-                                            <a className="button cursor-link" href={p.url} target="_blank" rel="noreferrer">Live</a>
-                                        </Magnetic>
-                                    )}
-                                    {p.repo && (
-                                        <Magnetic>
-                                            <a className="button cursor-link" href={p.repo} target="_blank" rel="noreferrer">Code</a>
-                                        </Magnetic>
-                                    )}
-                                </div>
-                            </div>
-                        </motion.article>
-                    ))}
-                </motion.div>
+                {/* Links */}
+                <div className="flex gap-3 mt-4">
+                  {project.liveLink && (
+                    <a
+                      href={project.liveLink}
+                      target="_blank"
+                      className="text-blue-500 text-sm"
+                    >
+                      Live
+                    </a>
+                  )}
+
+                  {project.githubLink && (
+                    <a
+                      href={project.githubLink}
+                      target="_blank"
+                      className="text-gray-700 text-sm"
+                    >
+                      GitHub
+                    </a>
+                  )}
+                </div>
+
+              </div>
             </div>
-        </MotionSection>
-    );
+          ))}
+
+        </div>
+      </div>
+    </section>
+  );
 }
