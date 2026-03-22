@@ -15,39 +15,46 @@ export default function AdminLayout({
 }) {
   return (
     <div className="min-h-screen flex bg-gray-100">
-      
-      {/* Sidebar */}
-      <aside className="w-64 bg-black text-white flex flex-col">
-        <div className="p-4 text-xl font-bold border-b border-gray-700">
-          Admin Panel
+
+      {/* ✅ SIDEBAR (ONLY NAVIGATION) */}
+      <aside className="w-64 bg-gray-900 text-white flex flex-col">
+
+        <div className="p-4 text-lg font-semibold border-b border-gray-700">
+          Admin Dashboard
         </div>
 
-        <nav className="flex-1 p-4 space-y-2">
-          <a href="/admin" className="block hover:bg-gray-800 p-2 rounded">
+        <nav className="flex-1 p-4 space-y-1 text-sm">
+
+          <a href="/admin" className="block px-3 py-2 rounded hover:bg-gray-800">
             Dashboard
           </a>
-          <a href="/admin/projects" className="block hover:bg-gray-800 p-2 rounded">
+
+          <a href="/admin/projects" className="block px-3 py-2 rounded hover:bg-gray-800">
             Projects
           </a>
-          <a href="/admin/messages" className="block hover:bg-gray-800 p-2 rounded">
+
+          <a href="/admin/messages" className="block px-3 py-2 rounded hover:bg-gray-800">
             Messages
           </a>
-          <a href="/admin/settings" className="block hover:bg-gray-800 p-2 rounded">
+
+          <a href="/admin/settings" className="block px-3 py-2 rounded hover:bg-gray-800">
             Settings
           </a>
+
         </nav>
 
-        <div className="p-4 border-t border-gray-700 text-sm">
-          © Admin
+        <div className="p-4 text-xs border-t border-gray-700 text-gray-400">
+          Admin Panel v1.0
         </div>
       </aside>
 
-      {/* MAIN */}
+      {/* ✅ MAIN AREA */}
       <div className="flex-1 flex flex-col">
 
-        {/* ✅ CLIENT COMPONENT HERE */}
+        {/* Topbar (no navbar duplication) */}
         <AdminTopbar />
 
+        {/* Content */}
         <main className="flex-1 p-6">
           {children}
         </main>
