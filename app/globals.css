@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Smooth scrolling */
+html { scroll-behavior: smooth; }
+
+/* ---------- Layout Utilities ---------- */
+.container-px { @apply px-4 sm:px-6 lg:px-8; }
+.section { @apply container-px mx-auto max-w-6xl py-16 sm:py-24; }
+.section-title { @apply text-3xl sm:text-4xl font-bold tracking-tight; }
+.section-lead { @apply mt-3 text-slate-600 dark:text-slate-300; }
+
+/* ---------- Components ---------- */
+.card {
+    @apply rounded-2xl shadow-sm ring-1 ring-black/5 dark:ring-white/5
+    bg-white/70 dark:bg-slate-900/60 backdrop-blur;
+}
+.button {
+    @apply inline-flex items-center gap-2 rounded-xl px-4 py-2 font-medium
+    ring-1 ring-black/10 dark:ring-white/10 hover:translate-y-[-1px] transition;
+}
+
+/* ---------- Cursor Behavior ---------- */
+/* Hide OS cursor everywhere by default (we show our custom dot+ring) */
+.custom-cursor-root, .custom-cursor-root * {
+    cursor: none !important;
+}
+
+/* When hovering interactive elements, show OS pointer and hide custom cursor.
+   The component toggles this class on <body>. */
+.cursor-pointer-on, .cursor-pointer-on * {
+    cursor: pointer !important;
+}
+
+/* Mark non-native interactive elements (e.g., div cards) */
+.cursor-link { cursor: pointer; }
+
+/* ---------- Dark Mode Base ---------- */
+body { @apply bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100; }
+html { transition: background-color 0.3s ease, color 0.3s ease; }
+
+/* ---------- Forms ---------- */
+input, textarea {
+    @apply w-full rounded-lg border border-slate-300 dark:border-slate-700
+    bg-white/70 dark:bg-slate-900/70 px-3 py-2 text-sm
+    placeholder-slate-400 dark:placeholder-slate-500
+    focus:outline-none focus:ring-2 focus:ring-blue-600/40;
+}
+
+/* ---------- Footer ---------- */
+footer { @apply border-t border-black/5 dark:border-white/5 text-center py-6 text-sm opacity-80; }
